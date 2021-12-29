@@ -9,3 +9,5 @@ Fitur :
 3. Peminjaman Buku
 4. Pengembalian Buku
 5. Lihat Data Peminjaman
+6. Lihat Data Anggota
+7. Lihat Data Buku
