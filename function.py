@@ -135,33 +135,41 @@ def remove_anggota(kd_buku,kd_anggota):
     myfile.close()
 
 def viewPinjam():
-    dataPinjam  = readPinjamBuku()
-    dataBuku    = readBuku()
-    dataAnggota = readAnggota()
-    dataBukuD    = {}
-    dataAnggotaD = {}
-    
-    for i in range(len(dataBuku)):
-        dataBuku[i] = dataBuku[i].split(",") #Ini untuk mengubah jadi list 
-        dataBukuD[dataBuku[i][0]] = dataBuku[i][1:]
+    # ubah data text -> list (temp) -> dict (dataBuku)
+    # Data buku
+    temp = []
+    dataBuku = {}
+    myfile = open("buku.txt")
+    for line in myfile:
+        temp = line.split(",") #Mengubah menjadi multiple list
+        dataBuku[temp[0]] = [temp[1],temp[2],str(int(temp[3]))] #Mengubah multi list menjadi dict
+    # Data Anggota
+    temp = []
+    dataAnggota = {}
+    myfile = open("anggota.txt")
+    for line in myfile:
+        temp = line.split(",") #Mengubah menjadi multiple list
+        dataAnggota[temp[0]] = [temp[1],str(int(temp[2]))] #Mengubah multi list menjadi dict
+    # Data Pinjam
+    temp = []
+    dataPinjam = {}
+    myfile = open("peminjaman.txt")
+    for line in myfile:
+        temp = line.split(",") #Mengubah menjadi multiple list
+        temp[-1] = temp[-1][0:-1]
+        dataPinjam[temp[0]] = temp[1:] #Mengubah multi list menjadi dict
 
-    for i in range(len(dataAnggota)):
-        dataAnggota[i] = dataAnggota[i].split(",") #Ini untuk mengubah jadi list 
-        dataAnggotaD[dataAnggota[i][0]] = dataAnggota[i][1:]
+    #kita nampilin value dataBuku dimana keysnya adalah kode buku yang ada didalam dataPinjam
+    print("*** DAFTAR PEMINJAMAN BUKU ***\n")
 
-    for i in range(len(dataPinjam)):
-        dataPinjam[i] = dataPinjam[i].split(",") #Ini untuk mengubah jadi list 
-
-    print("\n*** DAFTAR PEMINJAMAN BUKU ***\n")
-
-    for i in range(len(dataPinjam)):
-        print("Judul: "+dataBukuD[dataPinjam[i][0]][0])
-        print("Penulis: "+dataBukuD[dataPinjam[i][0]][1])
-        for j in range(len(dataPinjam[i][1:])):
-            if dataAnggotaD[dataPinjam[i][j+1]][1] == "1":
-                print(str(j+1)+". "+dataAnggotaD[dataPinjam[i][j+1]][0]+"(*)")            
-            else:
-                print(str(j+1)+". "+dataAnggotaD[dataPinjam[i][j+1]][0])            
+    for i in dataPinjam.keys():
+        nomer = 0
+        print("Judul : "+dataBuku[i][0])
+        print("Penulis : "+dataBuku[i][1])
+        print("Daftar Pinjam:")
+        for j in dataPinjam[i]:
+            nomer +=1
+            print(str(nomer)+". "+str(dataAnggota[j][0])+("(*)" if dataAnggota[j][1] == "1" else ""))
         print()
     
 def viewAnggota():
@@ -185,5 +193,3 @@ def viewBuku():
         print("Penulis : "+dataBuku[i][2])
         print("Stok : "+dataBuku[i][3])
         print()
-
-
